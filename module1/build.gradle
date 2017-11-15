@@ -1,0 +1,64 @@
+import com.google.common.collect.ImmutableList
+import org.gradle.api.internal.tasks.compile.DefaultJavaCompileSpec
+import org.gradle.api.internal.tasks.compile.DefaultJavaCompileSpecFactory
+
+apply plugin: 'com.android.library'
+
+configurations {
+    intentBuilder
+}
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "27.0.0"
+
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    libraryVariants.all { variant ->
+        def compileTask = variant.javaCompiler
+        def intentBuilderCompileTask = task "intentBuilderCompile${variant.name.capitalize()}" (type: JavaCompile) {
+            setSource(compileTask.getSource())
+            setDestinationDir(compileTask.getDestinationDir())
+            setClasspath(compileTask.getClasspath())
+            setTargetCompatibility(compileTask.getTargetCompatibility())
+            setSourceCompatibility(compileTask.getSourceCompatibility())
+            include('**/*IntentBuilder**')
+        }
+
+
+        def intentBuilderJarTask = task "intentBuilderJar${variant.name.capitalize()}"(type: Jar, dependsOn: intentBuilderCompileTask) {
+            baseName = "module1-${variant.name.capitalize()}-intentBuilder"
+            from compileTask.destinationDir
+            include('**/**IntentBuilder**')
+        }
+
+        artifacts {
+            intentBuilder intentBuilderJarTask
+        }
+    }
+}
+
+dependencies {
+    //implementation project(path: ':module1', configuration: 'intentBuilder')
+
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}
