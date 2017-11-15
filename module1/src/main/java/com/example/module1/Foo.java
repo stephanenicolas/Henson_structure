@@ -1,8 +1,10 @@
 package com.example.module1;
 
-/**
- * Created by snicolas on 11/14/17.
- */
+import android.support.v7.app.AppCompatActivity;
 
-public class Foo {
+import com.f2prateek.dart.HensonNavigable;
+import com.f2prateek.dart.InjectExtra;
+
+@HensonNavigable(model = com.example.module1.FooModel.class)
+public class Foo extends AppCompatActivity {
 }

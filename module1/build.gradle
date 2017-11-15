@@ -1,12 +1,4 @@
-import com.google.common.collect.ImmutableList
-import org.gradle.api.internal.tasks.compile.DefaultJavaCompileSpec
-import org.gradle.api.internal.tasks.compile.DefaultJavaCompileSpecFactory
-
 apply plugin: 'com.android.library'
-
-configurations {
-    intentBuilder
-}
 
 android {
     compileSdkVersion 26
@@ -30,15 +22,34 @@ android {
         }
     }
 
+    //https://developer.android.com/studio/build/build-variants.html#sourcesets
+    sourceSets {
+        navigation {
+            setRoot 'src/navigation'
+        }
+        main { java.srcDirs = ['src/main/java', 'src/navigation/java'] }
+    }
+
+    configurations {
+        intentBuilder
+        navigationApi {
+            canBeResolved true
+        }
+    }
+
     libraryVariants.all { variant ->
         def compileTask = variant.javaCompiler
-        def intentBuilderCompileTask = task "intentBuilderCompile${variant.name.capitalize()}" (type: JavaCompile) {
-            setSource(compileTask.getSource())
+        def intentBuilderCompileTask = task "intentBuilderCompile${variant.name.capitalize()}"(type: JavaCompile) {
+            setSource(android.sourceSets.navigation.java.sourceFiles)
             setDestinationDir(compileTask.getDestinationDir())
-            setClasspath(compileTask.getClasspath())
+            classpath = configurations.navigationApi
+            options.compilerArgs = ["-proc:only"] + compileTask.options.compilerArgs
+            options.annotationProcessorPath = compileTask.options.annotationProcessorPath
             setTargetCompatibility(compileTask.getTargetCompatibility())
             setSourceCompatibility(compileTask.getSourceCompatibility())
-            include('**/*IntentBuilder**')
+            doFirst {
+                file("${buildDir}/generated/source/apt/debug/").mkdirs()
+            }
         }
 
 
@@ -54,8 +65,24 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+    jcenter()
+    google()
+}
+
 dependencies {
     //implementation project(path: ':module1', configuration: 'intentBuilder')
+    navigationApi "com.f2prateek.dart:dart-annotations:2.0.3"
+    navigationApi 'com.android.support:appcompat-v7:26.1.0'
+    navigationApi "com.f2prateek.dart:dart:2.0.3"
+    navigationApi "com.f2prateek.dart:henson:2.0.3"
+    navigationApi "com.google.android:android:4.1.1.4"
+
+    implementation "com.f2prateek.dart:dart:2.0.3"
+    implementation "com.f2prateek.dart:henson:2.0.3"
+    annotationProcessor "com.f2prateek.dart:henson-processor:2.0.3"
+    annotationProcessor "com.f2prateek.dart:dart-processor:2.0.3"
 
     implementation 'com.android.support:appcompat-v7:26.1.0'
     testImplementation 'junit:junit:4.12'
