@@ -27,11 +27,11 @@ android {
         navigation {
             setRoot 'src/navigation'
         }
-        main { java.srcDirs = ['src/main/java', 'src/navigation/java'] }
+        main { java.srcDirs = ['src/main/java', 'src/navigation/java', "${buildDir}/generated/source/apt/navigation/"] }
     }
 
     configurations {
-        //do we really need this for the artifact to work ?
+        //the name of the artifact
         intentBuilder
 
         //the api scope: is there any convention ? apiElements?
@@ -66,7 +66,6 @@ def intentBuilderCompileTask = task "intentBuilderCompile" (type: JavaCompile) {
     }
 }
 
-
 def intentBuilderJarTask = task "intentBuilderJar" (type: Jar, dependsOn: intentBuilderCompileTask) {
     baseName = "module1-intentBuilder"
     from intentBuilderCompileTask.destinationDir
@@ -76,6 +75,7 @@ def intentBuilderJarTask = task "intentBuilderJar" (type: Jar, dependsOn: intent
 artifacts {
     intentBuilder intentBuilderJarTask
 }
+
 dependencies {
     //implementation project(path: ':module1', configuration: 'intentBuilder')
     navigationApi "com.f2prateek.dart:dart-annotations:2.0.3"
@@ -85,8 +85,6 @@ dependencies {
     navigationAnnotationProcessor "com.f2prateek.dart:henson-processor:2.0.3"
 
     implementation "com.f2prateek.dart:dart:2.0.3"
-    implementation "com.f2prateek.dart:henson:2.0.3"
-    annotationProcessor "com.f2prateek.dart:henson-processor:2.0.3"
     annotationProcessor "com.f2prateek.dart:dart-processor:2.0.3"
 
     implementation 'com.android.support:appcompat-v7:26.1.0'
