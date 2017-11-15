@@ -31,8 +31,16 @@ android {
     }
 
     configurations {
+        //do we really need this for the artifact to work ?
         intentBuilder
+
+        //the api scope
         navigationApi {
+            canBeResolved true
+        }
+
+        //the ap scope
+        navigationAnnotationProcessor {
             canBeResolved true
         }
     }
@@ -43,8 +51,7 @@ android {
             setSource(android.sourceSets.navigation.java.sourceFiles)
             setDestinationDir(compileTask.getDestinationDir())
             classpath = configurations.navigationApi
-            options.compilerArgs = ["-proc:only"] + compileTask.options.compilerArgs
-            options.annotationProcessorPath = compileTask.options.annotationProcessorPath
+            options.annotationProcessorPath = configurations.navigationAnnotationProcessor
             setTargetCompatibility(compileTask.getTargetCompatibility())
             setSourceCompatibility(compileTask.getSourceCompatibility())
             doFirst {
@@ -78,6 +85,7 @@ dependencies {
     navigationApi "com.f2prateek.dart:dart:2.0.3"
     navigationApi "com.f2prateek.dart:henson:2.0.3"
     navigationApi "com.google.android:android:4.1.1.4"
+    navigationAnnotationProcessor "com.f2prateek.dart:henson-processor:2.0.3"
 
     implementation "com.f2prateek.dart:dart:2.0.3"
     implementation "com.f2prateek.dart:henson:2.0.3"
