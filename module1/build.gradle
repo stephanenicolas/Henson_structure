@@ -34,7 +34,7 @@ android {
         //do we really need this for the artifact to work ?
         intentBuilder
 
-        //the api scope
+        //the api scope: is there any convention ? apiElements?
         navigationApi {
             canBeResolved true
         }
@@ -42,32 +42,6 @@ android {
         //the ap scope
         navigationAnnotationProcessor {
             canBeResolved true
-        }
-    }
-
-    libraryVariants.all { variant ->
-        def compileTask = variant.javaCompiler
-        def intentBuilderCompileTask = task "intentBuilderCompile${variant.name.capitalize()}"(type: JavaCompile) {
-            setSource(android.sourceSets.navigation.java.sourceFiles)
-            setDestinationDir(compileTask.getDestinationDir())
-            classpath = configurations.navigationApi
-            options.annotationProcessorPath = configurations.navigationAnnotationProcessor
-            setTargetCompatibility(compileTask.getTargetCompatibility())
-            setSourceCompatibility(compileTask.getSourceCompatibility())
-            doFirst {
-                file("${buildDir}/generated/source/apt/debug/").mkdirs()
-            }
-        }
-
-
-        def intentBuilderJarTask = task "intentBuilderJar${variant.name.capitalize()}"(type: Jar, dependsOn: intentBuilderCompileTask) {
-            baseName = "module1-${variant.name.capitalize()}-intentBuilder"
-            from compileTask.destinationDir
-            include('**/**IntentBuilder**')
-        }
-
-        artifacts {
-            intentBuilder intentBuilderJarTask
         }
     }
 }
@@ -78,6 +52,30 @@ repositories {
     google()
 }
 
+def intentBuilderCompileTask = task "intentBuilderCompile" (type: JavaCompile) {
+    setSource(android.sourceSets.navigation.java.sourceFiles)
+    setDestinationDir(file("${buildDir}/navigation/classes/"))
+    classpath = configurations.navigationApi
+    options.compilerArgs = ["-s", "${buildDir}/generated/source/apt/navigation/"]
+    options.annotationProcessorPath = configurations.navigationAnnotationProcessor
+    setTargetCompatibility(JavaVersion.VERSION_1_7)
+    setSourceCompatibility(JavaVersion.VERSION_1_7)
+    doFirst {
+        file("${buildDir}/generated/source/apt/navigation/").mkdirs()
+        file("${buildDir}/navigation/classes/").mkdirs()
+    }
+}
+
+
+def intentBuilderJarTask = task "intentBuilderJar" (type: Jar, dependsOn: intentBuilderCompileTask) {
+    baseName = "module1-intentBuilder"
+    from intentBuilderCompileTask.destinationDir
+    include('**/**IntentBuilder*.class')
+}
+
+artifacts {
+    intentBuilder intentBuilderJarTask
+}
 dependencies {
     //implementation project(path: ':module1', configuration: 'intentBuilder')
     navigationApi "com.f2prateek.dart:dart-annotations:2.0.3"
