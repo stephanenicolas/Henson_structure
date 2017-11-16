@@ -27,7 +27,7 @@ android {
         navigation {
             setRoot 'src/navigation'
         }
-        main { java.srcDirs = ['src/main/java', 'src/navigation/java', "${buildDir}/generated/source/apt/navigation/"] }
+        main { java.srcDirs = ['src/main/java', 'src/navigation/java'] }
     }
 
     configurations {
@@ -71,7 +71,7 @@ def intentBuilderCompileTask = task "intentBuilderCompile" (type: JavaCompile) {
 def intentBuilderJarTask = task "intentBuilderJar" (type: Jar, dependsOn: intentBuilderCompileTask) {
     baseName = "module1-intentBuilder"
     from intentBuilderCompileTask.destinationDir
-    include('**/**IntentBuilder*.class')
+    include('**/**__IntentBuilder*.class', '**/Henson*.class')
 }
 
 artifacts {
