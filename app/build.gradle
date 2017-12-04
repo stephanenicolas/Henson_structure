@@ -19,6 +19,7 @@ repositories {
 
 dependencies {
     implementation project(path: ':module1', configuration: 'intentBuilder')
+
     implementation project(path: ':module1')
     implementation "com.f2prateek.dart:henson:3.0.0-RC1-SNAPSHOT"
 

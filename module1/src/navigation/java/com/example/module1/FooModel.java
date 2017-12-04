@@ -1,6 +1,8 @@
 package com.example.module1;
 
 
+import android.support.annotation.Nullable;
+
 import dart.BindExtra;
 import dart.DartModel;
 
@@ -14,7 +16,10 @@ TODO
  * so it would link dynamically the model and the class, but we would need to annotate the class
  * of the activity, not the model. It would be complicated for empty classes, a bit overkill...
  */
-@DartModel("com.example.module1.Foo")
+@DartModel("com.example.app.Foo")
 public class FooModel {
-    @BindExtra String s;
+    String s;
+    @BindExtra("cool") String t;
+    @Nullable String u;
+    @Nullable @BindExtra("superCool") String v;
 }

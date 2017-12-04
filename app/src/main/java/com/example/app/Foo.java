@@ -13,9 +13,9 @@ public class Foo extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = Henson.with(this)
+        Intent intent = com.example.module1.Henson.with(this)
                 .gotoFoo()
-                .s("hello henson 3")
+                .cool("hello henson 3")
                 .build();
         startActivity(intent);
     }
