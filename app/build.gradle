@@ -11,17 +11,22 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    applicationVariants.all {
+
+    }
 }
 
 repositories {
     mavenLocal()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 dependencies {
-    implementation project(path: ':module1', configuration: 'intentBuilder')
+    debugImplementation project(path: ':module1', configuration: 'navigationApiDebug')
 
     implementation project(path: ':module1')
-    implementation "com.f2prateek.dart:henson:3.0.0-RC1-SNAPSHOT"
+    implementation "com.f2prateek.dart:henson:3.0.0-RC2-SNAPSHOT"
 
     implementation 'com.android.support:appcompat-v7:26.1.0'
 }
