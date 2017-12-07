@@ -1,4 +1,4 @@
-package com.example.snicolas.hensonStructure;
+package com.example.app;
 import android.content.Context;
 import com.example.module1.Foo__IntentBuilder;
 public class HensonNavigator {

@@ -18,5 +18,12 @@ public class Foo extends AppCompatActivity {
                 .cool("hello henson 3")
                 .build();
         startActivity(intent);
+
+        Intent intent2 = com.example.app.HensonNavigator
+                .gotoFoo(this)
+                .cool("hello henson 3")
+                .build();
+        startActivity(intent2);
+
     }
 }
