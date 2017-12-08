@@ -51,13 +51,10 @@ repositories {
 }
 
 
-configurations {
-    navigationDebugApi
-}
 println project.configurations.properties
 
 dependencies {
-    navigationDebugApi 'com.android.support:support-annotations:27.0.2'
+    navigationApi 'com.android.support:support-annotations:27.0.2'
 
     implementation "com.f2prateek.dart:dart:3.0.0-RC2-SNAPSHOT"
     annotationProcessor "com.f2prateek.dart:dart-processor:3.0.0-RC2-SNAPSHOT"
@@ -69,3 +66,16 @@ dependencies {
 }
 
 henson.navigatorPackageName = "com.example.snicolas.hensonStructure"
+
+afterEvaluate {
+    configurations['debugRuntimeClasspath'].getAllDependencies().each { dependency ->
+        try {
+            println "searching dependencies ${dependency.name}"
+            dependency.resolve().each{
+                println "searching dependencies ${it.properties}"
+            }
+        } catch (exception) {
+            exception.printStackTrace()
+        }
+    }
+}
