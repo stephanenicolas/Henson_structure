@@ -40,8 +40,7 @@ henson {
 }
 
 dependencies {
-    //implementation project(path: ':module1', configuration: 'navigation')
-    debugImplementation project(path: ':module1', configuration: 'navigationDebug')
+    navigation project(path: ':module1')
 
     //implementation project(path: ':module1')
     implementation "com.f2prateek.dart:henson:3.0.0-RC2-SNAPSHOT"

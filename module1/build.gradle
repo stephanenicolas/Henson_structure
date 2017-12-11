@@ -66,16 +66,3 @@ dependencies {
 }
 
 henson.navigatorPackageName = "com.example.snicolas.hensonStructure"
-
-afterEvaluate {
-    configurations['debugRuntimeClasspath'].getAllDependencies().each { dependency ->
-        try {
-            println "searching dependencies ${dependency.name}"
-            dependency.resolve().each{
-                println "searching dependencies ${it.properties}"
-            }
-        } catch (exception) {
-            exception.printStackTrace()
-        }
-    }
-}
