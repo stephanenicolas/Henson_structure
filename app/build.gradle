@@ -42,9 +42,6 @@ henson {
 dependencies {
     navigation project(path: ':module1')
 
-    //implementation project(path: ':module1')
-    implementation "com.f2prateek.dart:henson:3.0.0-RC2-SNAPSHOT"
-
     implementation 'com.android.support:appcompat-v7:26.1.0'
 }
 

@@ -16,12 +16,14 @@ public class Foo extends AppCompatActivity {
         Intent intent = com.example.module1.Henson.with(this)
                 .gotoFoo()
                 .cool("hello henson 3")
+                .s("")
                 .build();
         startActivity(intent);
 
         Intent intent2 = com.example.app.HensonNavigator
-                .gotoFoo(this)
+                .gotoFooNavigationModel(this)
                 .cool("hello henson 3")
+                .s("")
                 .build();
         startActivity(intent2);
 

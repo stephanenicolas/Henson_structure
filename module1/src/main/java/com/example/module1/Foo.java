@@ -11,7 +11,7 @@ public class Foo extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FooModel fooModel = new FooModel();
+        FooNavigationModel fooModel = new FooNavigationModel();
 
         Dart.bind(fooModel, this);
         setTitle("Foo");

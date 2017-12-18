@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.snicolas.hensonStructure;
 import android.content.Context;
 import com.example.module1.FooNavigationModel__IntentBuilder;
 import com.example.module1.FooNavigationModel__IntentBuilder.RequiredSequence;

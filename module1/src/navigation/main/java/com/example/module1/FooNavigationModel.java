@@ -16,8 +16,8 @@ TODO
  * so it would link dynamically the model and the class, but we would need to annotate the class
  * of the activity, not the model. It would be complicated for empty classes, a bit overkill...
  */
-@DartModel("com.example.app.Foo")
-public class FooModel {
+@DartModel
+public class FooNavigationModel {
     String s;
     @BindExtra("cool") String t;
     @Nullable String u;

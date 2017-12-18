@@ -61,7 +61,6 @@ dependencies {
     navigationApi 'com.android.support:support-annotations:27.0.2'
 
     implementation "com.f2prateek.dart:dart:3.0.0-RC2-SNAPSHOT"
-    annotationProcessor "com.f2prateek.dart:dart-processor:3.0.0-RC2-SNAPSHOT"
 
     implementation 'com.android.support:appcompat-v7:26.1.0'
     testImplementation 'junit:junit:4.12'
