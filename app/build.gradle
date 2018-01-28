@@ -1,4 +1,20 @@
 apply plugin: 'com.android.application'
+apply plugin: 'dart.henson-plugin'
+
+buildscript {
+    repositories {
+        //use install goal on the lib
+        mavenLocal()
+        //maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath "com.f2prateek.dart:henson-plugin:3.0.0-RC2-SNAPSHOT"
+    }
+    configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
 
 android {
     compileSdkVersion 26
@@ -15,12 +31,20 @@ android {
 
 repositories {
     mavenLocal()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+}
+
+henson {
+    navigatorPackageName = "com.example.app"
+    navigatorOnly true
 }
 
 dependencies {
-    implementation project(path: ':module1', configuration: 'intentBuilder')
-    implementation project(path: ':module1')
-    implementation "com.f2prateek.dart:henson:3.0.0-RC1-SNAPSHOT"
+    navigationApiOf('module1')
+
+    implementation "com.f2prateek.dart:dart:3.0.0-RC2-SNAPSHOT"
+    implementation "com.f2prateek.dart:henson:3.0.0-RC2-SNAPSHOT"
 
     implementation 'com.android.support:appcompat-v7:26.1.0'
 }
+

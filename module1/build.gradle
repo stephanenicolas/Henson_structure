@@ -1,4 +1,20 @@
+buildscript {
+    repositories {
+        //use install goal on the lib
+        mavenLocal()
+        //maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath "com.f2prateek.dart:henson-plugin:3.0.0-RC2-SNAPSHOT"
+    }
+    configurations.classpath.resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 apply plugin: 'com.android.library'
+apply plugin: 'dart.henson-plugin'
 
 android {
     compileSdkVersion 26
@@ -21,76 +37,41 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    //https://developer.android.com/studio/build/build-variants.html#sourcesets
-    sourceSets {
-        navigation {
-            setRoot 'src/navigation'
-        }
-        main { java.srcDirs = ['src/main/java', 'src/navigation/java'] }
-    }
-
-    configurations {
-        //the name of the artifact
-        intentBuilder
-
-        //the api scope: is there any convention ? apiElements?
-        navigationApi {
-            canBeResolved true
-        }
-
-        //the ap scope
-        navigationAnnotationProcessor {
-            canBeResolved true
-        }
-    }
+//
+//    flavorDimensions "size"
+//
+//    productFlavors {
+//        small {
+//            dimension "size"
+//        }
+//        big {
+//            dimension "size"
+//        }
+//    }
 }
 
 repositories {
     mavenCentral()
     jcenter()
     google()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     mavenLocal()
 }
 
-def intentBuilderCompileTask = task "intentBuilderCompile" (type: JavaCompile) {
-    setSource(android.sourceSets.navigation.java.sourceFiles)
-    setDestinationDir(file("${buildDir}/navigation/classes/"))
-    classpath = configurations.navigationApi
-    options.compilerArgs = ["-s", "${buildDir}/generated/source/apt/navigation/"]
-    options.annotationProcessorPath = configurations.navigationAnnotationProcessor
-    setTargetCompatibility(JavaVersion.VERSION_1_7)
-    setSourceCompatibility(JavaVersion.VERSION_1_7)
-    doFirst {
-        file("${buildDir}/generated/source/apt/navigation/").mkdirs()
-        file("${buildDir}/navigation/classes/").mkdirs()
-    }
-}
-
-def intentBuilderJarTask = task "intentBuilderJar" (type: Jar, dependsOn: intentBuilderCompileTask) {
-    baseName = "module1-intentBuilder"
-    from intentBuilderCompileTask.destinationDir
-    include('**/**__IntentBuilder*.class', '**/Henson*.class')
-}
-
-artifacts {
-    intentBuilder intentBuilderJarTask
-}
-
 dependencies {
-    //implementation project(path: ':module1', configuration: 'intentBuilder')
-    navigationApi "com.f2prateek.dart:dart-annotations:3.0.0-RC1-SNAPSHOT"
-    navigationApi "com.f2prateek.dart:dart:3.0.0-RC1-SNAPSHOT"
-    navigationApi "com.f2prateek.dart:henson:3.0.0-RC1-SNAPSHOT"
-    navigationApi "com.google.android:android:4.1.1.4"
-    navigationAnnotationProcessor "com.f2prateek.dart:henson-processor:3.0.0-RC1-SNAPSHOT"
+    navigationApi 'com.android.support:support-annotations:27.0.2'
 
-    implementation "com.f2prateek.dart:dart:3.0.0-RC1-SNAPSHOT"
-    annotationProcessor "com.f2prateek.dart:dart-processor:3.0.0-RC1-SNAPSHOT"
+    implementation "com.f2prateek.dart:dart:3.0.0-RC2-SNAPSHOT"
+
+    navigationApiOfSelf()
+    api project( path: ':module1', configuration: 'navigation')
+    //this is for AS to work, it's not necessary for gradle on CLI
+    api fileTree(dir: "$buildDir/libs", include: '*.jar')
+
 
     implementation 'com.android.support:appcompat-v7:26.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
+
+henson.navigatorPackageName = "com.example.snicolas.hensonStructure"
